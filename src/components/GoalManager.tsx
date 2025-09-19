@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Plus, Target, Calendar, Trophy, Trash2, Edit2, CheckCircle, Clock, Check } from 'lucide-react';
 import { useGoals } from '../contexts/GoalsContext';
 import { useCourses } from '../contexts/CourseContext';
-import { useCourses } from '../contexts/CourseContext';
 import { Goal } from '../types';
 
 export const GoalManager: React.FC = () => {
