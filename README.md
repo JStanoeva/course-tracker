@@ -153,4 +153,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ for learners everywhere**
+**Made by Tora Blaze with ❤️ for learners everywhere**
