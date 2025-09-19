@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
-import { Plus, BookOpen, TrendingUp, Calendar } from 'lucide-react';
+import { Plus, BookOpen, TrendingUp, Calendar, Target, Trophy, Flame, BarChart3 } from 'lucide-react';
 import { useCourses } from '../contexts/CourseContext';
+import { useGoals } from '../contexts/GoalsContext';
+import { useStreak } from '../contexts/StreakContext';
 import { Course } from '../types';
 import { CourseCard } from './CourseCard';
 import { CourseForm } from './CourseForm';
 import { ThemeToggle } from './ThemeToggle';
 import { Timeline } from './Timeline';
 import { UserMenu } from './UserMenu';
+import { GoalManager } from './GoalManager';
+import { AchievementDisplay } from './AchievementDisplay';
+import { StreakDisplay } from './StreakDisplay';
 
 export const Dashboard: React.FC = () => {
   const { courses, addCourse, updateCourse } = useCourses();
+  const { goals, achievements } = useGoals();
+  const { streak } = useStreak();
   const [showForm, setShowForm] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | undefined>();
   const [selectedCourse, setSelectedCourse] = useState<Course | undefined>();
+  const [activeTab, setActiveTab] = useState<'courses' | 'goals' | 'achievements'>('courses');
 
   const handleAddCourse = (courseData: Omit<Course, 'id' | 'progress'>) => {
     addCourse(courseData);
@@ -52,6 +60,9 @@ export const Dashboard: React.FC = () => {
     ? courses.reduce((acc, course) => acc + course.progress, 0) / courses.length 
     : 0;
 
+  const activeGoals = goals.filter(g => !g.completed).length;
+  const currentStreak = streak.current;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-light via-white to-primary-main/20 dark:from-gray-900 dark:via-gray-800 dark:to-primary-dark/20 transition-colors duration-300">
       {/* Background Elements */}
@@ -84,7 +95,7 @@ export const Dashboard: React.FC = () => {
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <div className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-slide-up">
               <div className="flex items-center justify-between">
                 <div>
@@ -124,8 +135,81 @@ export const Dashboard: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            <div className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-slide-up delay-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Goals</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {activeGoals}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-green-600/10">
+                  <Target className="text-green-600" size={24} />
+                </div>
+              </div>
+            </div>
+
+            <div className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-slide-up delay-400">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Study Streak</p>
+                  <p className="text-3xl font-bold text-orange-600">
+                    {currentStreak}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-orange-600/10">
+                  <Flame className="text-orange-600" size={24} />
+                </div>
+              </div>
+            </div>
           </div>
 
+          {/* Navigation Tabs */}
+          <div className="flex items-center gap-4 mb-8">
+            <button
+              onClick={() => setActiveTab('courses')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                activeTab === 'courses'
+                  ? 'bg-primary-main text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-primary-main'
+              }`}
+            >
+              <BookOpen size={20} />
+              Courses
+            </button>
+            <button
+              onClick={() => setActiveTab('goals')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                activeTab === 'goals'
+                  ? 'bg-primary-main text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-primary-main'
+              }`}
+            >
+              <Target size={20} />
+              Goals
+            </button>
+            <button
+              onClick={() => setActiveTab('achievements')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                activeTab === 'achievements'
+                  ? 'bg-primary-main text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-primary-main'
+              }`}
+            >
+              <Trophy size={20} />
+              Achievements
+              {achievements.length > 0 && (
+                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                  {achievements.length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Content based on active tab */}
+          {activeTab === 'courses' && (
+            <>
           {/* Add Course Button */}
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
@@ -195,6 +279,34 @@ export const Dashboard: React.FC = () => {
             </div>
           )}
 
+            </>
+          )}
+
+          {activeTab === 'goals' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <GoalManager />
+              </div>
+              <div>
+                <StreakDisplay />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'achievements' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <AchievementDisplay />
+              </div>
+              <div className="space-y-6">
+                <StreakDisplay />
+                <div className="text-sm text-gray-600 dark:text-gray-400 backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-4">
+                  <p className="mb-2">🏆 Keep studying to unlock more achievements!</p>
+                  <p>Complete lessons, maintain streaks, and achieve your goals to earn badges.</p>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
 
         {/* Course Form Modal */}

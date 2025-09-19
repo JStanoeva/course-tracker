@@ -24,6 +24,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
   });
   const [lessons, setLessons] = useState<Lesson[]>(course?.lessons || []);
   const [exams, setExams] = useState<Exam[]>(course?.exams || []);
+  const [goals, setGoals] = useState<any[]>(course?.goals || []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
       ...formData,
       lessons,
       exams,
+      goals,
     });
   };
 
