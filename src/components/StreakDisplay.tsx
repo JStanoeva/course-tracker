@@ -1,9 +1,9 @@
 import React from 'react';
-import { Flame, Calendar, TrendingUp, Award } from 'lucide-react';
+import { Flame, Calendar, TrendingUp, Award, RotateCcw } from 'lucide-react';
 import { useStreak } from '../contexts/StreakContext';
 
 export const StreakDisplay: React.FC = () => {
-  const { streak, getStreakStatus } = useStreak();
+  const { streak, getStreakStatus, resetStreak } = useStreak();
   const status = getStreakStatus();
 
   const getStatusColor = () => {
@@ -58,8 +58,19 @@ export const StreakDisplay: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className={`px-3 py-1 rounded-full border text-sm font-medium ${getStatusColor()}`}>
-          {status === 'active' ? `${streak.current} days` : status}
+        <div className="flex items-center gap-2">
+          <div className={`px-3 py-1 rounded-full border text-sm font-medium ${getStatusColor()}`}>
+            {status === 'active' ? `${streak.current} days` : status}
+          </div>
+          {streak.current > 0 && (
+            <button
+              onClick={resetStreak}
+              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+              title="Reset Streak"
+            >
+              <RotateCcw size={16} />
+            </button>
+          )}
         </div>
       </div>
 

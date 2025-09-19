@@ -98,6 +98,16 @@ export const CourseProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           updated.goals = [];
         }
         
+        // Sync course-specific goals with the global goals context
+        if (updated.goals && updated.goals.length > 0) {
+          updated.goals.forEach((goal: Goal) => {
+            // Update goal's courseId to match the course
+            if (goal.courseId !== id) {
+              goal.courseId = id;
+            }
+          });
+        }
+        
         // Check for completed lessons/exams and update goals/achievements
         if (courseData.lessons) {
           const oldCompletedLessons = course.lessons.filter(l => l.completed).length;
