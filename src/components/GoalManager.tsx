@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Plus, Target, Calendar, Trophy, Trash2, Edit2, CheckCircle, Clock, Check } from 'lucide-react';
 import { useGoals } from '../contexts/GoalsContext';
 import { useCourses } from '../contexts/CourseContext';
+import { useCourses } from '../contexts/CourseContext';
 import { Goal } from '../types';
 
 export const GoalManager: React.FC = () => {
   const { goals, addGoal, updateGoal, deleteGoal } = useGoals();
-  const { courses } = useCourses();
+  const { courses, updateCourse } = useCourses();
   const [showForm, setShowForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | undefined>();
 
@@ -18,6 +19,18 @@ export const GoalManager: React.FC = () => {
     deadline: '',
     courseId: '',
   });
+
+  // Combine general goals with course-specific goals
+  const allGoals = [
+    ...goals,
+    ...courses.flatMap(course => 
+      (course.goals || []).map(goal => ({
+        ...goal,
+        courseTitle: course.title,
+        isCourseGoal: true
+      }))
+    )
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +55,12 @@ export const GoalManager: React.FC = () => {
   };
 
   const handleEdit = (goal: Goal) => {
+    // Don't allow editing course-specific goals from the Goals tab
+    if ((goal as any).isCourseGoal) {
+      alert('Course-specific goals can only be edited from the course editor. Please edit the goal from the course details.');
+      return;
+    }
+    
     setEditingGoal(goal);
     setFormData({
       title: goal.title,
@@ -55,14 +74,61 @@ export const GoalManager: React.FC = () => {
   };
 
   const handleIncrementProgress = (goal: Goal) => {
-    const newCurrent = Math.min(goal.current + 1, goal.target);
-    const completed = newCurrent >= goal.target;
-    updateGoal(goal.id, { current: newCurrent, completed });
+    if ((goal as any).isCourseGoal) {
+      // Handle course-specific goal
+      const course = courses.find(c => c.id === goal.courseId);
+      if (course) {
+        const updatedGoals = course.goals!.map(g => {
+          if (g.id === goal.id) {
+            const newCurrent = Math.min(g.current + 1, g.target);
+            const completed = newCurrent >= g.target;
+            return { ...g, current: newCurrent, completed };
+          }
+          return g;
+        });
+        updateCourse(course.id, { goals: updatedGoals });
+      }
+    } else {
+      // Handle general goal
+      const newCurrent = Math.min(goal.current + 1, goal.target);
+      const completed = newCurrent >= goal.target;
+      updateGoal(goal.id, { current: newCurrent, completed });
+    }
   };
 
   const handleMarkComplete = (goal: Goal) => {
-    updateGoal(goal.id, { current: goal.target, completed: true });
+    if ((goal as any).isCourseGoal) {
+      // Handle course-specific goal
+      const course = courses.find(c => c.id === goal.courseId);
+      if (course) {
+        const updatedGoals = course.goals!.map(g => {
+          if (g.id === goal.id) {
+            return { ...g, current: g.target, completed: true };
+          }
+          return g;
+        });
+        updateCourse(course.id, { goals: updatedGoals });
+      }
+    } else {
+      // Handle general goal
+      updateGoal(goal.id, { current: goal.target, completed: true });
+    }
   };
+
+  const handleDeleteGoal = (goal: Goal) => {
+    if ((goal as any).isCourseGoal) {
+      // Handle course-specific goal deletion
+      const course = courses.find(c => c.id === goal.courseId);
+      if (course) {
+        const updatedGoals = course.goals!.filter(g => g.id !== goal.id);
+        updateCourse(course.id, { goals: updatedGoals });
+      }
+    } else {
+      // Handle general goal deletion
+      deleteGoal(goal.id);
+    }
+  };
+
   const handleCancel = () => {
     setShowForm(false);
     setEditingGoal(undefined);
@@ -96,8 +162,8 @@ export const GoalManager: React.FC = () => {
     return `${diffDays} days remaining`;
   };
 
-  const activeGoals = goals.filter(g => !g.completed);
-  const completedGoals = goals.filter(g => g.completed);
+  const activeGoals = allGoals.filter(g => !g.completed);
+  const completedGoals = allGoals.filter(g => g.completed);
 
   return (
     <div className="space-y-6">
@@ -106,7 +172,7 @@ export const GoalManager: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Learning Goals</h2>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Set and track your learning milestones
+            Set and track your learning milestones ({goals.length} general, {courses.reduce((acc, course) => acc + (course.goals?.length || 0), 0)} course-specific)
           </p>
         </div>
         <button
@@ -138,8 +204,8 @@ export const GoalManager: React.FC = () => {
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                       {goal.description}
                     </p>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full ${
+                    <div className="flex items-center gap-2 text-sm mb-2">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
                         goal.type === 'daily' ? 'bg-primary-accent/20 text-primary-accent' :
                         goal.type === 'weekly' ? 'bg-primary-main/20 text-primary-main' :
                         goal.type === 'monthly' ? 'bg-primary-dark/20 text-primary-dark' :
@@ -147,6 +213,18 @@ export const GoalManager: React.FC = () => {
                       }`}>
                         {goal.type}
                       </span>
+                      {(goal as any).isCourseGoal && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-600 border border-blue-500/30 mt-2">
+                          📚 {(goal as any).courseTitle}
+                        </span>
+                      )}
+                      {(goal as any).isCourseGoal && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-600 border border-blue-500/30">
+                          📚 {(goal as any).courseTitle}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
                         <Calendar size={14} />
                         <span>{formatDeadline(goal.deadline)}</span>
@@ -171,14 +249,19 @@ export const GoalManager: React.FC = () => {
                       <Check size={16} />
                     </button>
                     <button
-                      onClick={() => handleEdit(goal)}
-                      className="p-2 rounded-lg text-gray-400 hover:text-primary-main hover:bg-white/10 transition-colors"
+                      onClick={() => handleEdit(goal as Goal)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        (goal as any).isCourseGoal 
+                          ? 'text-gray-300 cursor-not-allowed opacity-50' 
+                          : 'text-gray-400 hover:text-primary-main hover:bg-white/10'
+                      }`}
                       title="Edit goal"
+                      disabled={(goal as any).isCourseGoal}
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
-                      onClick={() => deleteGoal(goal.id)}
+                      onClick={() => handleDeleteGoal(goal as Goal)}
                       className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
                       title="Delete goal"
                     >
@@ -238,7 +321,7 @@ export const GoalManager: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => deleteGoal(goal.id)}
+                    onClick={() => handleDeleteGoal(goal as Goal)}
                     className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
                     title="Delete goal"
                   >
@@ -252,7 +335,7 @@ export const GoalManager: React.FC = () => {
       )}
 
       {/* Empty State */}
-      {goals.length === 0 && (
+      {allGoals.length === 0 && (
         <div className="text-center py-12">
           <Target size={48} className="text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
