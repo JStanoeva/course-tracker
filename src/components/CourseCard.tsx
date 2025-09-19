@@ -1,7 +1,8 @@
 import React from 'react';
-import { Calendar, BookOpen, Edit2, Trash2, CheckCircle, FileText } from 'lucide-react';
+import { Calendar, BookOpen, Edit2, Trash2, CheckCircle, FileText, Target, Settings } from 'lucide-react';
 import { Course } from '../types';
 import { useCourses } from '../contexts/CourseContext';
+import { BulkOperations } from './BulkOperations';
 
 interface CourseCardProps {
   course: Course;
@@ -11,6 +12,7 @@ interface CourseCardProps {
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect }) => {
   const { deleteCourse } = useCourses();
+  const [showBulkOps, setShowBulkOps] = React.useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -34,8 +36,14 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
     onSelect(course);
   };
 
+  const handleBulkOps = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowBulkOps(true);
+  };
+
   return (
-    <div className="group animate-scale-in">
+    <>
+      <div className="group animate-scale-in">
       <div 
         className="backdrop-blur-lg bg-gradient-to-br from-glass-light to-glass-main dark:from-glass-dark dark:to-glass-main rounded-xl border border-white/20 dark:border-white/10 p-6 hover:border-primary-main/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary-main/10 cursor-pointer"
         onClick={handleCardClick}
@@ -52,14 +60,23 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
           </div>
           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
+              onClick={handleBulkOps}
+              className="p-2 rounded-lg bg-white/10 hover:bg-primary-dark/20 text-gray-600 dark:text-gray-400 hover:text-primary-dark transition-all"
+              title="Bulk Operations"
+            >
+              <Settings size={16} />
+            </button>
+            <button
               onClick={() => onEdit(course)}
               className="p-2 rounded-lg bg-white/10 hover:bg-primary-main/20 text-gray-600 dark:text-gray-400 hover:text-primary-main transition-all"
+              title="Edit Course"
             >
               <Edit2 size={16} />
             </button>
             <button
               onClick={handleDelete}
               className="p-2 rounded-lg bg-white/10 hover:bg-primary-accent/20 text-gray-600 dark:text-gray-400 hover:text-primary-accent transition-all"
+              title="Delete Course"
             >
               <Trash2 size={16} />
             </button>
@@ -81,7 +98,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <div className="grid grid-cols-4 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
           <div className="flex items-center gap-1">
             <BookOpen size={16} />
             <span>{course.lessons.length} lessons</span>
@@ -93,6 +110,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
           <div className="flex items-center gap-1">
             <CheckCircle size={16} />
             <span>{course.lessons.filter(l => l.completed).length} completed</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Target size={16} />
+            <span>{course.goals?.length || 0} goals</span>
           </div>
         </div>
 
@@ -118,5 +139,14 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
         </div>
       </div>
     </div>
+
+      {/* Bulk Operations Modal */}
+      {showBulkOps && (
+        <BulkOperations 
+          course={course} 
+          onClose={() => setShowBulkOps(false)} 
+        />
+      )}
+    </>
   );
 };

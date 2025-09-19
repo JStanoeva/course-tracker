@@ -2,6 +2,8 @@ import React from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { CourseProvider } from './contexts/CourseContext';
+import { GoalsProvider } from './contexts/GoalsContext';
+import { StreakProvider } from './contexts/StreakContext';
 import { useAuth } from './contexts/AuthContext';
 import { Dashboard } from './components/Dashboard';
 import { AuthForm } from './components/AuthForm';
@@ -23,9 +25,13 @@ const AppContent: React.FC = () => {
   }
 
   return user ? (
-    <CourseProvider>
-      <Dashboard />
-    </CourseProvider>
+    <GoalsProvider>
+      <StreakProvider>
+        <CourseProvider>
+          <Dashboard />
+        </CourseProvider>
+      </StreakProvider>
+    </GoalsProvider>
   ) : (
     <AuthForm />
   );

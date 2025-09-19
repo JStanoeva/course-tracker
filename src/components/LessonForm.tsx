@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, X, Calendar, CheckSquare, Square } from 'lucide-react';
-import { Lesson, Homework } from '../types';
+import { Plus, X, Calendar, CheckSquare, Square, FileText, Edit3 } from 'lucide-react';
+import { Lesson, Homework, Note } from '../types';
+import { NoteEditor } from './NoteEditor';
 
 interface LessonFormProps {
   lessons: Lesson[];
@@ -11,6 +12,7 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
   const [newLessonTitle, setNewLessonTitle] = useState('');
   const [newLessonType, setNewLessonType] = useState<'lab' | 'exercise'>('exercise');
   const [newLessonDate, setNewLessonDate] = useState('');
+  const [editingNote, setEditingNote] = useState<{ lessonId: string; note?: Note } | null>(null);
 
   const addLesson = () => {
     if (!newLessonTitle.trim()) return;
@@ -22,6 +24,7 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
       date: newLessonDate,
       completed: false,
       homework: [],
+      notes: [],
     };
 
     onLessonsChange([...lessons, newLesson]);
@@ -65,8 +68,53 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
     updateLesson(lessonId, { homework: lesson.homework.filter(h => h.id !== homeworkId) });
   };
 
+  const addNote = (lessonId: string) => {
+    setEditingNote({ lessonId });
+  };
+
+  const saveNote = (lessonId: string, content: string) => {
+    const lesson = lessons.find(l => l.id === lessonId);
+    if (!lesson) return;
+
+    const now = new Date().toISOString();
+    let updatedNotes;
+
+    if (editingNote?.note) {
+      // Update existing note
+      updatedNotes = lesson.notes.map(note => 
+        note.id === editingNote.note!.id 
+          ? { ...note, content, updatedAt: now }
+          : note
+      );
+    } else {
+      // Add new note
+      const newNote: Note = {
+        id: Date.now().toString(),
+        content,
+        createdAt: now,
+        updatedAt: now,
+      };
+      updatedNotes = [...lesson.notes, newNote];
+    }
+
+    updateLesson(lessonId, { notes: updatedNotes });
+    setEditingNote(null);
+  };
+
+  const editNote = (lessonId: string, note: Note) => {
+    setEditingNote({ lessonId, note });
+  };
+
+  const deleteNote = (lessonId: string, noteId: string) => {
+    const lesson = lessons.find(l => l.id === lessonId);
+    if (!lesson) return;
+    
+    updateLesson(lessonId, { notes: lesson.notes.filter(n => n.id !== noteId) });
+  };
+
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       {/* Add new lesson */}
       <div className="backdrop-blur-md bg-glass-light dark:bg-glass-dark rounded-lg border border-white/20 dark:border-white/10 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -106,7 +154,13 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
 
       {/* Lessons list */}
       <div className="space-y-4">
-        {lessons.map((lesson, index) => (
+        {[...lessons].sort((a, b) => {
+          // Sort by date (earliest first), then by creation order if no dates
+          if (!a.date && !b.date) return 0;
+          if (!a.date) return 1;
+          if (!b.date) return -1;
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }).map((lesson, index) => (
           <div key={lesson.id} className="backdrop-blur-md bg-glass-light dark:bg-glass-dark rounded-lg border border-white/20 dark:border-white/10 p-4 animate-slide-up">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -119,7 +173,13 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
                 </button>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-medium text-gray-800 dark:text-white">{lesson.title}</h4>
+                    <input
+                      type="text"
+                      value={lesson.title}
+                      onChange={(e) => updateLesson(lesson.id, { title: e.target.value })}
+                      className="font-medium text-gray-800 dark:text-white bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-primary-main/50 rounded px-1 flex-1"
+                      placeholder="Lesson title"
+                    />
                     <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                       lesson.type === 'lab' 
                         ? 'bg-primary-accent/20 text-primary-accent' 
@@ -148,6 +208,51 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
               </button>
             </div>
 
+            {/* Notes */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Notes</h5>
+                <button
+                  type="button"
+                  onClick={() => addNote(lesson.id)}
+                  className="text-xs text-primary-main hover:text-primary-accent transition-colors flex items-center gap-1"
+                >
+                  <Plus size={12} />
+                  Add Note
+                </button>
+              </div>
+              <div className="space-y-2">
+                {lesson.notes && lesson.notes.map((note) => (
+                  <div key={note.id} className="p-3 bg-white/20 dark:bg-gray-800/20 rounded-lg">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {new Date(note.updatedAt).toLocaleDateString()}
+                      </div>
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => editNote(lesson.id, note)}
+                          className="text-gray-400 hover:text-primary-main transition-colors"
+                        >
+                          <Edit3 size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteNote(lesson.id, note.id)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
+                      {note.content.substring(0, 100)}
+                      {note.content.length > 100 && '...'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Homework */}
             <div>
@@ -209,6 +314,16 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
           </div>
         ))}
       </div>
-    </div>
+      </div>
+
+      {/* Note Editor Modal */}
+      {editingNote && (
+        <NoteEditor
+          note={editingNote.note}
+          onSave={(content) => saveNote(editingNote.lessonId, content)}
+          onCancel={() => setEditingNote(null)}
+        />
+      )}
+    </>
   );
 };

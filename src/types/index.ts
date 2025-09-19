@@ -1,3 +1,45 @@
+export interface Note {
+  id: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  type: 'daily' | 'weekly' | 'monthly' | 'course';
+  target: number;
+  current: number;
+  deadline: string;
+  completed: boolean;
+  courseId?: string;
+  createdAt: string;
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlockedAt: string;
+  category: 'study' | 'completion' | 'streak' | 'goal';
+}
+
+export interface Streak {
+  current: number;
+  longest: number;
+  lastActivityDate: string;
+  activities: StreakActivity[];
+}
+
+export interface StreakActivity {
+  date: string;
+  type: 'lesson' | 'homework' | 'exam' | 'study';
+  count: number;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -5,6 +47,7 @@ export interface Lesson {
   date: string;
   completed: boolean;
   homework: Homework[];
+  notes: Note[];
 }
 
 export interface Exam {
@@ -33,6 +76,7 @@ export interface Course {
   exams: Exam[];
   progress: number;
   color: string;
+  goals: Goal[];
 }
 
 export type ThemeMode = 'light' | 'dark' | 'system';
