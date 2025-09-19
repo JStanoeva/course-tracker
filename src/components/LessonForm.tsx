@@ -167,7 +167,13 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
                 </button>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-medium text-gray-800 dark:text-white">{lesson.title}</h4>
+                    <input
+                      type="text"
+                      value={lesson.title}
+                      onChange={(e) => updateLesson(lesson.id, { title: e.target.value })}
+                      className="font-medium text-gray-800 dark:text-white bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-primary-main/50 rounded px-1 flex-1"
+                      placeholder="Lesson title"
+                    />
                     <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                       lesson.type === 'lab' 
                         ? 'bg-primary-accent/20 text-primary-accent' 
