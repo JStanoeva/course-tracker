@@ -154,7 +154,13 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
 
       {/* Lessons list */}
       <div className="space-y-4">
-        {lessons.map((lesson, index) => (
+        {[...lessons].sort((a, b) => {
+          // Sort by date (earliest first), then by creation order if no dates
+          if (!a.date && !b.date) return 0;
+          if (!a.date) return 1;
+          if (!b.date) return -1;
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }).map((lesson, index) => (
           <div key={lesson.id} className="backdrop-blur-md bg-glass-light dark:bg-glass-dark rounded-lg border border-white/20 dark:border-white/10 p-4 animate-slide-up">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
