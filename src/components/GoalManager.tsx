@@ -195,7 +195,7 @@ export const GoalManager: React.FC = () => {
                 key={goal.id}
                 className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-scale-in"
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start gap-4 mb-4">
                   <div className="flex-1">
                     <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                       {goal.title}
@@ -217,11 +217,6 @@ export const GoalManager: React.FC = () => {
                           📚 {(goal as any).courseTitle}
                         </span>
                       )}
-                      {(goal as any).isCourseGoal && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-600 border border-blue-500/30">
-                          📚 {(goal as any).courseTitle}
-                        </span>
-                      )}
                     </div>
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
@@ -230,7 +225,7 @@ export const GoalManager: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 flex-shrink-0">
                     <button
                       onClick={() => handleIncrementProgress(goal)}
                       disabled={goal.current >= goal.target}
