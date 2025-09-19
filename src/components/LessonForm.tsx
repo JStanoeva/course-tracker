@@ -111,8 +111,10 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
     
     updateLesson(lessonId, { notes: lesson.notes.filter(n => n.id !== noteId) });
   };
+
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       {/* Add new lesson */}
       <div className="backdrop-blur-md bg-glass-light dark:bg-glass-dark rounded-lg border border-white/20 dark:border-white/10 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -300,6 +302,16 @@ export const LessonForm: React.FC<LessonFormProps> = ({ lessons, onLessonsChange
           </div>
         ))}
       </div>
-    </div>
+      </div>
+
+      {/* Note Editor Modal */}
+      {editingNote && (
+        <NoteEditor
+          note={editingNote.note}
+          onSave={(content) => saveNote(editingNote.lessonId, content)}
+          onCancel={() => setEditingNote(null)}
+        />
+      )}
+    </>
   );
 };

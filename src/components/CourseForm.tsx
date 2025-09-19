@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Save, Plus, CheckSquare, Square } from 'lucide-react';
-import { Course, Lesson, Exam } from '../types';
+import { X, Calendar, Save, Plus, CheckSquare, Square, Target, Trash2 } from 'lucide-react';
+import { Course, Lesson, Exam, Goal } from '../types';
 import { LessonForm } from './LessonForm';
+import { useCourses } from '../contexts/CourseContext';
 
 interface CourseFormProps {
   course?: Course;
@@ -24,7 +25,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
   });
   const [lessons, setLessons] = useState<Lesson[]>(course?.lessons || []);
   const [exams, setExams] = useState<Exam[]>(course?.exams || []);
-  const [goals, setGoals] = useState<any[]>(course?.goals || []);
+  const [courseGoals, setCourseGoals] = useState<Goal[]>(course?.goals || []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
       ...formData,
       lessons,
       exams,
-      goals,
+      goals: courseGoals,
     });
   };
 
@@ -58,6 +59,30 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
 
   const removeExam = (examId: string) => {
     setExams(prev => prev.filter(exam => exam.id !== examId));
+  };
+
+  const addCourseGoal = () => {
+    const newGoal: Omit<Goal, 'id' | 'current' | 'completed' | 'createdAt'> & { id: string; current: number; completed: boolean; createdAt: string } = {
+      id: Date.now().toString(),
+      title: 'New Course Goal',
+      description: '',
+      type: 'course',
+      target: 1,
+      current: 0,
+      deadline: '',
+      completed: false,
+      createdAt: new Date().toISOString(),
+      courseId: course?.id || 'new-course',
+    };
+    setCourseGoals(prev => [...prev, newGoal as Goal]);
+  };
+
+  const updateCourseGoal = (goalId: string, updates: Partial<Goal>) => {
+    setCourseGoals(prev => prev.map(goal => goal.id === goalId ? { ...goal, ...updates } : goal));
+  };
+
+  const removeCourseGoal = (goalId: string) => {
+    setCourseGoals(prev => prev.filter(goal => goal.id !== goalId));
   };
 
   return (
@@ -211,6 +236,92 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
                     >
                       <X size={16} />
                     </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Course Goals */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Course Goals
+              </h3>
+              <button
+                type="button"
+                onClick={addCourseGoal}
+                className="flex items-center gap-2 px-3 py-2 text-sm bg-primary-main/20 text-primary-main rounded-lg hover:bg-primary-main/30 transition-colors"
+              >
+                <Plus size={16} />
+                Add Goal
+              </button>
+            </div>
+            <div className="space-y-3 backdrop-blur-md bg-glass-light dark:bg-glass-dark rounded-lg border border-white/20 dark:border-white/10 p-4">
+              {courseGoals.length === 0 ? (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                  No course-specific goals added yet
+                </p>
+              ) : (
+                courseGoals.map((goal) => (
+                  <div key={goal.id} className="p-3 bg-white/30 dark:bg-gray-800/30 rounded-lg">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="text"
+                          value={goal.title}
+                          onChange={(e) => updateCourseGoal(goal.id, { title: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                          placeholder="Goal title"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeCourseGoal(goal.id)}
+                          className="p-2 rounded-lg text-gray-400 hover:text-primary-accent hover:bg-white/10 transition-colors"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Target</label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={goal.target}
+                            onChange={(e) => updateCourseGoal(goal.id, { target: parseInt(e.target.value) || 1 })}
+                            className="w-full px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Deadline</label>
+                          <input
+                            type="date"
+                            value={goal.deadline}
+                            onChange={(e) => updateCourseGoal(goal.id, { deadline: e.target.value })}
+                            className="w-full px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Progress</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max={goal.target}
+                            value={goal.current}
+                            onChange={(e) => updateCourseGoal(goal.id, { current: parseInt(e.target.value) || 0 })}
+                            className="w-full px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                          />
+                        </div>
+                      </div>
+                      <textarea
+                        value={goal.description}
+                        onChange={(e) => updateCourseGoal(goal.id, { description: e.target.value })}
+                        className="w-full px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/50 resize-none"
+                        placeholder="Goal description (optional)"
+                        rows={2}
+                      />
+                    </div>
                   </div>
                 ))
               )}

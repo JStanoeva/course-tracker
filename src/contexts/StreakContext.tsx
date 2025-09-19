@@ -6,6 +6,7 @@ interface StreakContextType {
   streak: Streak;
   recordActivity: (type: 'lesson' | 'homework' | 'exam' | 'study') => void;
   getStreakStatus: () => 'active' | 'broken' | 'new';
+  resetStreak: () => void;
 }
 
 const StreakContext = createContext<StreakContextType | undefined>(undefined);
@@ -118,11 +119,23 @@ export const StreakProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return 'broken';
   };
 
+  const resetStreak = () => {
+    if (window.confirm('Are you sure you want to reset your study streak? This action cannot be undone.')) {
+      setStreak({
+        current: 0,
+        longest: streak.longest, // Keep the longest streak record
+        lastActivityDate: '',
+        activities: [],
+      });
+    }
+  };
+
   return (
     <StreakContext.Provider value={{
       streak,
       recordActivity,
       getStreakStatus,
+      resetStreak,
     }}>
       {children}
     </StreakContext.Provider>
