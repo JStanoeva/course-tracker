@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Target, Calendar, Trophy, Trash2, Edit2, CheckCircle, Clock } from 'lucide-react';
+import { Plus, Target, Calendar, Trophy, Trash2, Edit2, CheckCircle, Clock, Check } from 'lucide-react';
 import { useGoals } from '../contexts/GoalsContext';
 import { useCourses } from '../contexts/CourseContext';
 import { Goal } from '../types';
@@ -54,6 +54,15 @@ export const GoalManager: React.FC = () => {
     setShowForm(true);
   };
 
+  const handleIncrementProgress = (goal: Goal) => {
+    const newCurrent = Math.min(goal.current + 1, goal.target);
+    const completed = newCurrent >= goal.target;
+    updateGoal(goal.id, { current: newCurrent, completed });
+  };
+
+  const handleMarkComplete = (goal: Goal) => {
+    updateGoal(goal.id, { current: goal.target, completed: true });
+  };
   const handleCancel = () => {
     setShowForm(false);
     setEditingGoal(undefined);
@@ -144,16 +153,34 @@ export const GoalManager: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleIncrementProgress(goal)}
+                      disabled={goal.current >= goal.target}
+                      className="p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Increment progress (+1)"
+                    >
+                      <Plus size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleMarkComplete(goal)}
+                      disabled={goal.completed}
+                      className="p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Mark as complete"
+                    >
+                      <Check size={16} />
+                    </button>
                     <button
                       onClick={() => handleEdit(goal)}
                       className="p-2 rounded-lg text-gray-400 hover:text-primary-main hover:bg-white/10 transition-colors"
+                      title="Edit goal"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => deleteGoal(goal.id)}
                       className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                      title="Delete goal"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -213,6 +240,7 @@ export const GoalManager: React.FC = () => {
                   <button
                     onClick={() => deleteGoal(goal.id)}
                     className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    title="Delete goal"
                   >
                     <Trash2 size={16} />
                   </button>
