@@ -25,13 +25,13 @@ const AppContent: React.FC = () => {
   }
 
   return user ? (
-    <CourseProvider>
-      <GoalsProvider>
-        <StreakProvider>
+    <GoalsProvider>
+      <StreakProvider>
+        <CourseProvider>
           <Dashboard />
-        </StreakProvider>
-      </GoalsProvider>
-    </CourseProvider>
+        </CourseProvider>
+      </StreakProvider>
+    </GoalsProvider>
   ) : (
     <AuthForm />
   );
