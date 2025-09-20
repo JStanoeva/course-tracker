@@ -118,15 +118,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
         </div>
 
         {/* Dates */}
-        <div className="flex items-center justify-between sm:gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center gap-1 flex-1 min-w-0">
+        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-1">
             <Calendar size={12} />
-            <span className="truncate">{formatDate(course.startDate)}</span>
+            <span>{formatDate(course.startDate)}</span>
           </div>
-          <span className="text-gray-400 mx-1 sm:mx-2">•</span>
-          <div className="flex items-center gap-1 flex-1 min-w-0">
+          <span>•</span>
+          <div className="flex items-center gap-1">
             <Calendar size={12} />
-            <span className="truncate">{formatDate(course.endDate)}</span>
+            <span>{formatDate(course.endDate)}</span>
           </div>
         </div>
 
