@@ -16,13 +16,17 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     // Check if this is a password reset callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get('type');
-    const accessToken = urlParams.get('access_token');
+    // Check both URL search params and hash params (Supabase uses hash)
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # from hash
+    
+    // Check search params first, then hash params
+    const type = searchParams.get('type') || hashParams.get('type');
+    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
     
     if (type === 'recovery' && accessToken) {
       setIsPasswordReset(true);
-      // Clear the URL parameters for security
+      // Clear both search and hash parameters for security
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
