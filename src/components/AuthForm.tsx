@@ -64,25 +64,6 @@ export const AuthForm: React.FC = () => {
       setLoading(false);
     }
   };
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setMessage('');
-
-    try {
-      if (!formData.resetEmail.trim()) {
-        throw new Error('Email is required');
-      }
-      const { error } = await sendPasswordResetEmail(formData.resetEmail);
-      if (error) throw error;
-      setMessage('Check your email for password reset instructions');
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
