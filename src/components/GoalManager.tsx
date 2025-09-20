@@ -169,16 +169,16 @@ export const GoalManager: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Learning Goals</h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Learning Goals</h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
             Set and track your learning milestones ({goals.length} general, {courses.reduce((acc, course) => acc + (course.goals?.length || 0), 0)} course-specific)
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-main to-primary-accent text-white rounded-lg hover:from-primary-main/80 hover:to-primary-accent/80 transition-all"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-main to-primary-accent text-white rounded-lg hover:from-primary-main/80 hover:to-primary-accent/80 transition-all w-full sm:w-auto touch-manipulation"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           Add Goal
         </button>
       </div>
@@ -186,24 +186,24 @@ export const GoalManager: React.FC = () => {
       {/* Active Goals */}
       {activeGoals.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3 sm:mb-4">
             Active Goals ({activeGoals.length})
           </h3>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
             {activeGoals.map((goal) => (
               <div
                 key={goal.id}
-                className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-scale-in"
+                className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-lg sm:rounded-xl border border-white/20 dark:border-white/10 p-4 sm:p-6 animate-scale-in"
               >
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-2 line-clamp-2">
                       {goal.title}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
                       {goal.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm mb-2">
+                    <div className="flex items-center flex-wrap gap-2 text-xs sm:text-sm mb-2">
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
                         goal.type === 'daily' ? 'bg-primary-accent/20 text-primary-accent' :
                         goal.type === 'weekly' ? 'bg-primary-main/20 text-primary-main' :
@@ -213,34 +213,34 @@ export const GoalManager: React.FC = () => {
                         {goal.type}
                       </span>
                       {(goal as any).isCourseGoal && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-600 border border-blue-500/30 mt-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-600 border border-blue-500/30">
                           📚 {(goal as any).courseTitle}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-4 text-sm">
-                      <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                        <Calendar size={14} />
-                        <span>{formatDeadline(goal.deadline)}</span>
+                    <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400 min-w-0">
+                        <Calendar size={12} />
+                        <span className="truncate">{formatDeadline(goal.deadline)}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-1 flex-shrink-0">
+                  <div className="flex flex-col sm:flex-row gap-1 flex-shrink-0">
                     <button
                       onClick={() => handleIncrementProgress(goal)}
                       disabled={goal.current >= goal.target}
-                      className="p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                       title="Increment progress (+1)"
                     >
-                      <Plus size={16} />
+                      <Plus size={14} />
                     </button>
                     <button
                       onClick={() => handleMarkComplete(goal)}
                       disabled={goal.completed}
-                      className="p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                       title="Mark as complete"
                     >
-                      <Check size={16} />
+                      <Check size={14} />
                     </button>
                     <button
                       onClick={() => handleEdit(goal as Goal)}
@@ -248,18 +248,18 @@ export const GoalManager: React.FC = () => {
                         (goal as any).isCourseGoal 
                           ? 'text-gray-300 cursor-not-allowed opacity-50' 
                           : 'text-gray-400 hover:text-primary-main hover:bg-white/10'
-                      }`}
+                      } touch-manipulation`}
                       title="Edit goal"
                       disabled={(goal as any).isCourseGoal}
                     >
-                      <Edit2 size={16} />
+                      <Edit2 size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteGoal(goal as Goal)}
-                      className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                      className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors touch-manipulation"
                       title="Delete goal"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
@@ -267,14 +267,14 @@ export const GoalManager: React.FC = () => {
                 {/* Progress */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       Progress: {goal.current} / {goal.target}
                     </span>
-                    <span className={`text-sm font-medium px-2 py-1 rounded-full ${getProgressColor(goal.current, goal.target, goal.completed)}`}>
+                    <span className={`text-xs sm:text-sm font-medium px-2 py-1 rounded-full ${getProgressColor(goal.current, goal.target, goal.completed)}`}>
                       {Math.round((goal.current / goal.target) * 100)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-primary-main to-primary-accent rounded-full transition-all duration-500"
                       style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
@@ -290,36 +290,36 @@ export const GoalManager: React.FC = () => {
       {/* Completed Goals */}
       {completedGoals.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3 sm:mb-4">
             Completed Goals ({completedGoals.length})
           </h3>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
             {completedGoals.map((goal) => (
               <div
                 key={goal.id}
-                className="backdrop-blur-lg bg-green-500/10 rounded-xl border border-green-500/20 p-6 animate-scale-in"
+                className="backdrop-blur-lg bg-green-500/10 rounded-lg sm:rounded-xl border border-green-500/20 p-4 sm:p-6 animate-scale-in"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle size={20} className="text-green-600" />
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-white">
+                    <div className="flex items-center gap-2 mb-2 min-w-0">
+                      <CheckCircle size={18} className="text-green-600 flex-shrink-0" />
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white line-clamp-2">
                         {goal.title}
                       </h4>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
                       {goal.description}
                     </p>
-                    <div className="text-sm text-green-600 font-medium">
+                    <div className="text-xs sm:text-sm text-green-600 font-medium">
                       Completed {goal.current} / {goal.target}
                     </div>
                   </div>
                   <button
                     onClick={() => handleDeleteGoal(goal as Goal)}
-                    className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors touch-manipulation flex-shrink-0"
                     title="Delete goal"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -330,19 +330,19 @@ export const GoalManager: React.FC = () => {
 
       {/* Empty State */}
       {allGoals.length === 0 && (
-        <div className="text-center py-12">
-          <Target size={48} className="text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
+        <div className="text-center py-8 sm:py-12">
+          <Target size={40} className="text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
             No goals set yet
           </h3>
-          <p className="text-gray-500 dark:text-gray-500 mb-6">
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-500 mb-6">
             Create your first learning goal to start tracking your progress
           </p>
           <button
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-main to-primary-accent text-white rounded-lg hover:from-primary-main/80 hover:to-primary-accent/80 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-main to-primary-accent text-white rounded-lg hover:from-primary-main/80 hover:to-primary-accent/80 transition-all w-full sm:w-auto touch-manipulation"
           >
-            <Plus size={20} />
+            <Plus size={18} />
             Create First Goal
           </button>
         </div>
@@ -351,36 +351,36 @@ export const GoalManager: React.FC = () => {
       {/* Goal Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-900/90 dark:to-gray-800/70 rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
-            <div className="p-6 border-b border-white/20 dark:border-white/10">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+          <div className="w-full max-w-md backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-900/90 dark:to-gray-800/70 rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
+            <div className="p-4 sm:p-6 border-b border-white/20 dark:border-white/10">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
                 {editingGoal ? 'Edit Goal' : 'Create New Goal'}
               </h3>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                   Goal Title *
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 touch-manipulation"
                   placeholder="e.g., Complete 5 lessons this week"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 resize-none"
+                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 resize-none touch-manipulation"
                   placeholder="Optional description"
                   rows={3}
                 />
@@ -388,13 +388,13 @@ export const GoalManager: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                     Type *
                   </label>
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as Goal['type'] }))}
-                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 touch-manipulation"
                     required
                   >
                     <option value="daily">Daily</option>
@@ -405,7 +405,7 @@ export const GoalManager: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                     Target *
                   </label>
                   <input
@@ -413,34 +413,34 @@ export const GoalManager: React.FC = () => {
                     min="1"
                     value={formData.target}
                     onChange={(e) => setFormData(prev => ({ ...prev, target: parseInt(e.target.value) || 1 }))}
-                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 touch-manipulation"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                   Deadline *
                 </label>
                 <input
                   type="date"
                   value={formData.deadline}
                   onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                  className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 touch-manipulation"
                   required
                 />
               </div>
 
               {formData.type === 'course' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                     Course (optional)
                   </label>
                   <select
                     value={formData.courseId}
                     onChange={(e) => setFormData(prev => ({ ...prev, courseId: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50"
+                    className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 touch-manipulation"
                   >
                     <option value="">Select a course</option>
                     {courses.map(course => (
@@ -452,17 +452,17 @@ export const GoalManager: React.FC = () => {
                 </div>
               )}
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="flex-1 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-white/20 transition-colors"
+                  className="flex-1 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-white/20 transition-colors touch-manipulation"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white hover:from-primary-main/80 hover:to-primary-accent/80 transition-all"
+                  className="flex-1 py-3 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white hover:from-primary-main/80 hover:to-primary-accent/80 transition-all touch-manipulation"
                 >
                   {editingGoal ? 'Update Goal' : 'Create Goal'}
                 </button>
