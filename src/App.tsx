@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { CourseProvider } from './contexts/CourseContext';
@@ -7,9 +8,33 @@ import { StreakProvider } from './contexts/StreakContext';
 import { useAuth } from './contexts/AuthContext';
 import { Dashboard } from './components/Dashboard';
 import { AuthForm } from './components/AuthForm';
+import { PasswordResetForm } from './components/PasswordResetForm';
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
+
+  useEffect(() => {
+    // Check if this is a password reset callback
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');
+    const accessToken = urlParams.get('access_token');
+    
+    if (type === 'recovery' && accessToken) {
+      setIsPasswordReset(true);
+      // Clear the URL parameters for security
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
+  const handlePasswordResetSuccess = () => {
+    setIsPasswordReset(false);
+    // User will be automatically logged in after password reset
+  };
+
+  const handlePasswordResetCancel = () => {
+    setIsPasswordReset(false);
+  };
 
   if (loading) {
     return (
@@ -24,6 +49,15 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // Show password reset form if in password reset flow
+  if (isPasswordReset) {
+    return (
+      <PasswordResetForm
+        onSuccess={handlePasswordResetSuccess}
+        onCancel={handlePasswordResetCancel}
+      />
+    );
+  }
   return user ? (
     <GoalsProvider>
       <StreakProvider>
