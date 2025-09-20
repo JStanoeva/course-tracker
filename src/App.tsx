@@ -26,8 +26,6 @@ const AppContent: React.FC = () => {
     
     if (type === 'recovery' && accessToken) {
       setIsPasswordReset(true);
-      // Clear both search and hash parameters for security
-      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 

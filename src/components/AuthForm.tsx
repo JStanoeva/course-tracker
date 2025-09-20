@@ -17,7 +17,6 @@ export const AuthForm: React.FC = () => {
     password: '',
     username: '',
     resetEmail: '',
-    resetEmail: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
