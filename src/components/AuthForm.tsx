@@ -179,3 +179,5 @@ export const AuthForm: React.FC = () => {
         </div>
       </div>
     </div>
+  );
+};
