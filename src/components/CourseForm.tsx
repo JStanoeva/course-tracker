@@ -87,47 +87,47 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-4xl max-h-[90vh] overflow-auto backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60 rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
+      <div className="w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-auto backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60 rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
         <div className="sticky top-0 flex items-center justify-between p-6 border-b border-white/20 dark:border-white/10 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
             {course ? 'Edit Course' : 'Add New Course'}
           </h2>
           <button
             onClick={onCancel}
-            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20 transition-colors"
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20 transition-colors touch-manipulation"
           >
             <X size={24} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Basic Information */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                 Course Title *
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                 placeholder="Enter course title"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                 Color Theme
               </label>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-2 flex-wrap touch-manipulation">
                 {colorOptions.map((color) => (
                   <button
                     key={color}
                     type="button"
                     onClick={() => handleInputChange('color', color)}
-                    className={`w-8 h-8 rounded-full border-2 transition-all ${
+                    className={`w-8 h-8 rounded-full border-2 transition-all touch-manipulation ${
                       formData.color === color
                         ? 'border-gray-800 dark:border-white scale-110'
                         : 'border-white/50 hover:scale-105'
@@ -140,22 +140,22 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all resize-none"
+              className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all resize-none touch-manipulation"
               placeholder="Course description"
             />
           </div>
 
           {/* Dates */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                 <Calendar className="inline w-4 h-4 mr-1" />
                 Start Date *
               </label>
@@ -163,13 +163,13 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => handleInputChange('startDate', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 touch-manipulation">
                 <Calendar className="inline w-4 h-4 mr-1" />
                 End Date *
               </label>
@@ -177,7 +177,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
                 type="date"
                 value={formData.endDate}
                 onChange={(e) => handleInputChange('endDate', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                className="w-full px-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                 required
               />
             </div>
@@ -337,17 +337,17 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSave, onCancel
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-6 border-t border-white/20 dark:border-white/10">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 sm:pt-6 border-t border-white/20 dark:border-white/10">
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 py-3 px-6 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors"
+              className="flex-1 py-3 px-6 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors touch-manipulation"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-6 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white hover:from-primary-main/80 hover:to-primary-accent/80 transition-all flex items-center justify-center gap-2 font-medium"
+              className="flex-1 py-3 px-6 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white hover:from-primary-main/80 hover:to-primary-accent/80 transition-all flex items-center justify-center gap-2 font-medium touch-manipulation"
             >
               <Save size={20} />
               {course ? 'Update Course' : 'Create Course'}

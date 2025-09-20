@@ -94,15 +94,15 @@ export const AchievementDisplay: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Achievements</h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Achievements</h2>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
               Your learning accomplishments ({achievements.length} unlocked)
             </p>
           </div>
           {achievements.length > 6 && (
             <button
               onClick={() => setShowAll(!showAll)}
-              className="px-4 py-2 text-primary-main hover:text-primary-accent transition-colors"
+              className="px-4 py-2 text-primary-main hover:text-primary-accent transition-colors text-sm sm:text-base touch-manipulation whitespace-nowrap"
             >
               {showAll ? 'Show Less' : 'Show All'}
             </button>
@@ -111,29 +111,29 @@ export const AchievementDisplay: React.FC = () => {
 
         {/* Achievements Grid */}
         {achievements.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayedAchievements.map((achievement) => {
               const IconComponent = getCategoryIcon(achievement.category);
               return (
                 <div
                   key={achievement.id}
-                  className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-xl border border-white/20 dark:border-white/10 p-6 animate-scale-in hover:scale-105 transition-all"
+                  className="backdrop-blur-lg bg-glass-light dark:bg-glass-dark rounded-lg sm:rounded-xl border border-white/20 dark:border-white/10 p-4 sm:p-6 animate-scale-in hover:scale-105 transition-all"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl">{achievement.icon}</div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="text-2xl sm:text-3xl flex-shrink-0">{achievement.icon}</div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 dark:text-white mb-1">
+                      <h3 className="font-bold text-sm sm:text-base text-gray-800 dark:text-white mb-1 line-clamp-2">
                         {achievement.title}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
                         {achievement.description}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getCategoryColor(achievement.category)}`}>
-                          <IconComponent size={12} />
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getCategoryColor(achievement.category)} w-fit`}>
+                          <IconComponent size={10} />
                           {achievement.category}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
                           {formatDate(achievement.unlockedAt)}
                         </span>
                       </div>
@@ -144,12 +144,12 @@ export const AchievementDisplay: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <Trophy size={64} className="text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
+          <div className="text-center py-8 sm:py-12">
+            <Trophy size={48} className="text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
               No achievements yet
             </h3>
-            <p className="text-gray-500 dark:text-gray-500 mb-6">
+            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-500 mb-6 px-4">
               Start completing lessons and setting goals to unlock your first achievement!
             </p>
           </div>

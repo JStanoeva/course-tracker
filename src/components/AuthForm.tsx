@@ -98,18 +98,18 @@ export const AuthForm: React.FC = () => {
         </div>
       </header>
       <div className="relative z-10 w-full max-w-md">
-        <div className="backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60 rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
+        <div className="backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60 rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl animate-scale-in">
           {/* Form Header */}
-          <div className="p-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-main to-primary-accent rounded-full mb-4">
-              {showForgotPassword ? <Lock className="text-white" size={24} /> :
-               isLogin ? <LogIn className="text-white" size={24} /> : <UserPlus className="text-white" size={24} />}
+          <div className="p-6 sm:p-8 text-center">
+            <div className="inline-flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-primary-main to-primary-accent rounded-full mb-4">
+              {showForgotPassword ? <Lock className="text-white" size={20} /> :
+               isLogin ? <LogIn className="text-white" size={20} /> : <UserPlus className="text-white" size={20} />}
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-2">
               {showForgotPassword ? 'Reset Password' :
                isLogin ? 'Welcome Back' : 'Create Account'}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
               {showForgotPassword ? 'Enter your email to receive reset instructions' :
                isLogin ? 'Sign in to your course tracker' : 'Start tracking your learning journey'}
             </p>
@@ -117,15 +117,15 @@ export const AuthForm: React.FC = () => {
 
           {/* Forgot Password Form */}
           {showForgotPassword ? (
-            <form onSubmit={handleForgotPassword} className="px-8 pb-8 space-y-4">
+            <form onSubmit={handleForgotPassword} className="px-6 sm:px-8 pb-6 sm:pb-8 space-y-4">
               {error && (
-                <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-600 text-sm">
+                <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-600 text-xs sm:text-sm">
                   {error}
                 </div>
               )}
 
               {message && (
-                <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-600 text-sm">
+                <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-600 text-xs sm:text-sm">
                   {message}
                 </div>
               )}
@@ -138,7 +138,7 @@ export const AuthForm: React.FC = () => {
                   type="email"
                   value={formData.resetEmail}
                   onChange={(e) => handleInputChange('resetEmail', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                   placeholder="Enter your email address"
                   required
                 />
@@ -147,13 +147,13 @@ export const AuthForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white font-medium hover:from-primary-main/80 hover:to-primary-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white font-medium hover:from-primary-main/80 hover:to-primary-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 touch-manipulation"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
-                    <Mail size={20} />
+                    <Mail size={18} />
                     Send Reset Email
                   </>
                 )}
@@ -163,7 +163,7 @@ export const AuthForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={resetStates}
-                  className="text-primary-main hover:text-primary-accent transition-colors"
+                  className="text-primary-main hover:text-primary-accent transition-colors touch-manipulation text-sm sm:text-base"
                 >
                   Back to Sign In
                 </button>
@@ -171,15 +171,15 @@ export const AuthForm: React.FC = () => {
             </form>
           ) : (
             /* Login/Signup Form */
-            <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-4">
+            <form onSubmit={handleSubmit} className="px-6 sm:px-8 pb-6 sm:pb-8 space-y-4">
             {error && (
-              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-600 text-sm">
+              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-600 text-xs sm:text-sm">
                 {error}
               </div>
             )}
 
             {message && (
-              <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-600 text-sm">
+              <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-600 text-xs sm:text-sm">
                 {message}
               </div>
             )}
@@ -208,7 +208,7 @@ export const AuthForm: React.FC = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                 placeholder="Email address"
                 required
               />
@@ -222,7 +222,7 @@ export const AuthForm: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="w-full pl-10 pr-12 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all"
+                className="w-full pl-10 pr-12 py-3 rounded-lg backdrop-blur-md bg-white/50 dark:bg-gray-800/50 border border-white/30 dark:border-gray-600/30 text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all touch-manipulation"
                 placeholder="Password"
                 minLength={6}
                 required
@@ -230,7 +230,7 @@ export const AuthForm: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 touch-manipulation"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -239,13 +239,13 @@ export const AuthForm: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white font-medium hover:from-primary-main/80 hover:to-primary-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-primary-main to-primary-accent text-white font-medium hover:from-primary-main/80 hover:to-primary-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 touch-manipulation"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
+                  {isLogin ? <LogIn size={18} /> : <UserPlus size={18} />}
                   {isLogin ? 'Sign In' : 'Sign Up'}
                 </>
               )}
@@ -257,7 +257,7 @@ export const AuthForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowForgotPassword(true)}
-                  className="text-sm text-primary-main hover:text-primary-accent transition-colors"
+                  className="text-sm text-primary-main hover:text-primary-accent transition-colors touch-manipulation"
                 >
                   Forgot your password?
                 </button>
@@ -270,7 +270,7 @@ export const AuthForm: React.FC = () => {
                   setIsLogin(!isLogin);
                   resetStates();
                 }}
-                className="text-primary-main hover:text-primary-accent transition-colors"
+                className="text-primary-main hover:text-primary-accent transition-colors touch-manipulation text-sm sm:text-base"
               >
                 {isLogin 
                   ? "Don't have an account? Sign up" 
