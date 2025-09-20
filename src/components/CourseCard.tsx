@@ -99,21 +99,21 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onSelect
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-center gap-1" title={`${course.lessons.length} lessons`}>
             <BookOpen size={16} />
-            <span>{course.lessons.length} lessons</span>
+            <span className="font-medium">{course.lessons.length}</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-center gap-1" title={`${course.exams.length} exams`}>
             <FileText size={16} />
-            <span>{course.exams.length} exams</span>
+            <span className="font-medium">{course.exams.length}</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-center gap-1" title={`${course.lessons.filter(l => l.completed).length} completed lessons`}>
             <CheckCircle size={16} />
-            <span>{course.lessons.filter(l => l.completed).length} completed</span>
+            <span className="font-medium">{course.lessons.filter(l => l.completed).length}</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-center gap-1" title={`${course.goals?.length || 0} goals`}>
             <Target size={16} />
-            <span>{course.goals?.length || 0} goals</span>
+            <span className="font-medium">{course.goals?.length || 0}</span>
           </div>
         </div>
 

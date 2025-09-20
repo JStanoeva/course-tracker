@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { CourseProvider } from './contexts/CourseContext';
@@ -7,9 +8,35 @@ import { StreakProvider } from './contexts/StreakContext';
 import { useAuth } from './contexts/AuthContext';
 import { Dashboard } from './components/Dashboard';
 import { AuthForm } from './components/AuthForm';
+import { PasswordResetForm } from './components/PasswordResetForm';
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
+
+  useEffect(() => {
+    // Check if this is a password reset callback
+    // Check both URL search params and hash params (Supabase uses hash)
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # from hash
+    
+    // Check search params first, then hash params
+    const type = searchParams.get('type') || hashParams.get('type');
+    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
+    
+    if (type === 'recovery' && accessToken) {
+      setIsPasswordReset(true);
+    }
+  }, []);
+
+  const handlePasswordResetSuccess = () => {
+    setIsPasswordReset(false);
+    // User will be automatically logged in after password reset
+  };
+
+  const handlePasswordResetCancel = () => {
+    setIsPasswordReset(false);
+  };
 
   if (loading) {
     return (
@@ -24,6 +51,15 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // Show password reset form if in password reset flow
+  if (isPasswordReset) {
+    return (
+      <PasswordResetForm
+        onSuccess={handlePasswordResetSuccess}
+        onCancel={handlePasswordResetCancel}
+      />
+    );
+  }
   return user ? (
     <GoalsProvider>
       <StreakProvider>
