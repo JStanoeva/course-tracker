@@ -7,11 +7,9 @@ export const AuthForm: React.FC = () => {
   const { signUp, signIn, sendPasswordResetEmail } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
   const [message, setMessage] = useState('');
 
   const [formData, setFormData] = useState({
